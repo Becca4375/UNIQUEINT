@@ -1,15 +1,13 @@
 
 
 const fs = require('fs'); //allows reading and writing files
-const path = require('path'); //h
+const path = require('path'); //handles file paths in a cross-platform way
 
 const MIN_VALUE = -1023;
 const MAX_VALUE = 1023;
 const VALUE_COUNT = MAX_VALUE - MIN_VALUE + 1;
 const RESULT_SUFFIX = '_result.txt';
 
-// A line is valid only if it contains exactly one signed integer, with
-// optional spaces or tabs around it. The range is enforced by the assignment.
 function parseIntegerLine(line) {
   if (!/^[ \t]*[+-]?\d+[ \t]*$/.test(line)) {
     return null;
@@ -28,14 +26,14 @@ function processFile(inputPath) {
   const memoryBefore = process.memoryUsage();
   const seen = new Array(VALUE_COUNT);
 
-  // Initialize the fixed-size presence table without using fill or sort.
+
   for (let i = 0; i < VALUE_COUNT; i += 1) {
     seen[i] = false;
   }
   const contents = fs.readFileSync(inputPath, 'utf8');
   let lineStart = 0;
 
-  // Walk the file line by line. This also handles a final line without a newline.
+
   for (let i = 0; i <= contents.length; i += 1) {
     if (i === contents.length || contents[i] === '\n') {
       let lineEnd = i;
@@ -67,7 +65,7 @@ function processFile(inputPath) {
 
   const elapsedMs = Number(process.hrtime.bigint() - startedAt) / 1_000_000;
   const memoryAfter = process.memoryUsage();
-  const tableBytes = VALUE_COUNT; // Approximate: one boolean slot per possible integer.
+  const tableBytes = VALUE_COUNT; 
 
   console.log(`Created: ${outputPath}`);
   console.log(`Unique integers: ${uniqueCount}`);
@@ -99,7 +97,7 @@ function main() {
         continue;
       }
       if (entry.name.toLowerCase().endsWith(RESULT_SUFFIX)) {
-        continue; // Do not treat generated output files as fresh inputs.
+        continue; 
       }
 
       processFile(path.join(inputDirectory, entry.name));
